@@ -1,0 +1,48 @@
+/******************************************************************************\
+|                                                                              |
+|                                   icon-styles.js                             |
+|                                                                              |
+|******************************************************************************|
+|                                                                              |
+|        This defines the dom and svg visual styles for this application.      |
+|                                                                              |
+|******************************************************************************|
+|                Opticosm - Copyright (c) 2015, Abe Megahed                    |
+\******************************************************************************/
+
+/*
+ * icon styles
+ */
+
+svg text {
+	font-family: FontAwesome;
+}
+
+.icon {
+	font-size: 24px;
+	/* fill: Orange; */
+	/* fill: yellowGreen; */
+}
+
+.dark .icon {
+	fill: white;
+}
+
+.icon.small {
+	font-size: 18px;
+}
+
+.icon:hover {
+	/* fill: Gold; */
+	/* fill: darkGreen; */
+	/* stroke: yellowGreen; */
+}
+
+.draggable {
+	cursor: move;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

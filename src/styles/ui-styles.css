@@ -1,0 +1,51 @@
+/******************************************************************************\
+|                                                                              |
+|                                 ui-styles.js                                 |
+|                                                                              |
+|******************************************************************************|
+|                                                                              |
+|        This defines the dom and svg visual styles for this application.      |
+|                                                                              |
+|******************************************************************************|
+|                Opticosm - Copyright (c) 2015, Abe Megahed                    |
+\******************************************************************************/
+
+#user-interface {
+	position: absolute;
+	width: 100%;
+	top: 0;
+	text-align: center;
+
+	/*
+	 * make user interface elements non selectable to avoid
+	 * the cursor changing to a text select cursor on drag.
+	 */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+label {
+	font-size: 16px;
+}
+
+#slider {
+	top: 25px;
+	left: 25px;
+}
+
+#selector {
+	margin-top: 20px; 
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.unselectable {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

@@ -1,0 +1,51 @@
+/******************************************************************************\
+|                                                                              |
+|                                   styles.js                                  |
+|                                                                              |
+|******************************************************************************|
+|                                                                              |
+|        This defines the dom and svg visual styles for this application.      |
+|                                                                              |
+|******************************************************************************|
+|                Opticosm - Copyright (c) 2015, Abe Megahed                    |
+\******************************************************************************/
+
+html, body {
+	font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
+	font-size: 14px;
+	margin: 0;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+}
+
+.full-screen {
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+}
+
+canvas, svg {
+	border: 1px solid blue;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+/*
+ * dark styles
+ */
+
+.dark {
+	color: white;
+}
+
+.dark svg {
+	background: #333333;
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html> 
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Canvas Lens</title>
+
+		<!-- styles -->
+		<link rel="stylesheet" type="text/css" href="styles/styles.css" />
+	</head>
+	<body>
+		<!-- library scripts -->
+		<script type="text/javascript" src="scripts/library/underscore/underscore.js"></script>
+		<script type="text/javascript" src="scripts/library/jquery/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="scripts/library/jquery/mousewheel/jquery.mousewheel.js"></script>
+
+		<!-- utility scripts -->
+		<script type="text/javascript" src="scripts/utilities/math-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/string-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/color-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/unit-conversions.js"></script>
+		<script type="text/javascript" src="scripts/utilities/vector2.js"></script>
+
+		<!-- optics model scripts -->
+		<script type="text/javascript" src="scripts/models/optics/physics/light.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/physics/spectral-lines.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/material.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/materials.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/nikon-glasses.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/surface.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/planar.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/spherical.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/element.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/lens.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/elements.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/optics.js"></script>
+
+		<!-- optical systems scripts -->
+		<script type="text/javascript" src="scripts/models/optical-systems/achromat.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/biconcave.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/biconvex.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/capsule.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/convex-diamond.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/double-gauss.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/fisheye.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/lens-types.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/nagler.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/negative-meniscus.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/plano-concave.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/plano-convex.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/positive-meniscus.js"></script>
+		<script type="text/javascript" src="scripts/models/optical-systems/sphere.js"></script>
+
+		<!-- viewport scripts -->
+		<script type="text/javascript" src="scripts/views/mouse/mouse-drag-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/mouse/mouse-wheel-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/bounds/bounds.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/bounds/bounds2.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/grids/grid.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/grids/multi-grid.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/canvas-viewport.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-drag-pan-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-drag-zoom-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-wheel-zoom-behavior.js"></script>
+
+		<!-- optics viewing scripts -->
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/surface-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/planar-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/spherical-view.js"></script>	
+		<script type="text/javascript" src="scripts/views/optics/elements/element-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/lens-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/elements-view.js"></script>	
+		
+		<div id="text" style="position:absolute"></div>
+		<canvas id="canvas" style="width:100%; height:100%"></canvas>
+		
+		<script>
+
+			// create views
+			//
+			//var lens = fisheye.elements[0];
+			var lens = doubleGauss.elements[0];
+			var lensView = new LensView(lens);
+
+			window.onload = function() {
+
+				// create viewport
+				//
+				var viewport = new CanvasViewport(document.getElementById("canvas"), function(context) {
+
+					// set drawing context
+					//
+					context.lineWidth = 2 / pixelsPerMillimeter / this.scale;
+					context.strokeStyle = "black";
+					context.fillStyle = "#ccccff";
+
+					// draw view
+					//
+					context.beginPath();
+					lensView.draw(context);
+					context.closePath();
+					context.fill();
+					context.stroke();
+				}, {
+					scale: 1,
+					offset: new Vector2(-lens.thickness / 2, 0),
+					grid: new MultiGrid()
+				});
+
+				// create viewport behaviors
+				//
+				var panBehavior = new MouseDragPanBehavior(viewport, null, {
+					button: 1
+				});
+				var zoomBehavior = new MouseDragZoomBehavior(viewport, null, {
+					button: 2
+				});
+				var zoomBehavior = new MouseWheelZoomBehavior(viewport);
+			};
+		</script>
+	</body>
+</html>

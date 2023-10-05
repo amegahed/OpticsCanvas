@@ -1,0 +1,109 @@
+/******************************************************************************\
+|                                                                              |
+|                                  optics-styles.js                            |
+|                                                                              |
+|******************************************************************************|
+|                                                                              |
+|        This defines the dom and svg visual styles for this application.      |
+|                                                                              |
+|******************************************************************************|
+|                Opticosm - Copyright (c) 2015, Abe Megahed                    |
+\******************************************************************************/
+
+.lens {
+	fill-opacity: 0.25;
+}
+
+.lens path {
+	stroke-width: 2;
+	vector-effect: non-scaling-stroke;
+}
+
+.lens path:not(.surface) {
+	fill-opacity: 0.25;
+}
+
+.lens path:not(.surface):hover {
+	cursor: pointer;
+	fill-opacity: 0.5;
+}
+
+/*
+ * lens surface styles
+ */
+
+.lens path.surface {
+	fill: none;
+	stroke-width: 3;
+	visibility: hidden;
+	pointer-events: stroke;
+}
+
+.lens path.surface:hover {
+	stroke: orange;
+	visibility: visible;
+	stroke-opacity: 1.0;
+}
+
+/*
+ * beam styles
+ */
+
+.beam path {
+	fill: none;
+	/* stroke: Orange; */
+	/* stroke: YellowGreen; */
+	stroke: grey;
+	stroke-width: 2;
+	opacity: 0.5;
+	vector-effect: non-scaling-stroke;
+}
+
+.beam path:hover {
+	/* stroke: darkGreen; */
+	opacity: 1.0;
+}
+
+/*
+ * obstructed beam styles
+ */
+
+.beam path.obstructed {
+	stroke: darkGrey;
+	opacity: 0.1;
+}
+
+.beam path.obstructed:hover {
+	stroke: silver;
+	opacity: 1.0;
+}
+
+/*
+ * dark beam styles
+ */
+
+.dark .beam path {
+	stroke: white;
+}
+
+/*
+ * tooltip styles
+ */
+
+.dark .tooltip .tooltip-inner {
+	color: black;
+	background-color: white;
+}
+.dark .tooltip.top .tooltip-arrow {
+	border-top: 5px solid white
+}
+.dark .tooltip.bottom .tooltip-arrow {
+	border-bottom: 5px solid white
+}
+.dark .tooltip.left .tooltip-arrow {
+	border-left: 5px solid white
+}
+.dark .tooltip.right .tooltip-arrow {
+	border-right: 5px solid white
+}
+

@@ -1,0 +1,131 @@
+<!DOCTYPE html> 
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Canvas Surfaces</title>
+
+		<!-- styles -->
+		<link rel="stylesheet" type="text/css" href="styles/styles.css" />
+	</head>
+	<body>
+		<!-- library scripts -->
+		<script type="text/javascript" src="scripts/library/underscore/underscore.js"></script>
+		<script type="text/javascript" src="scripts/library/jquery/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="scripts/library/jquery/mousewheel/jquery.mousewheel.js"></script>
+
+		<!-- utility scripts -->
+		<script type="text/javascript" src="scripts/utilities/math-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/string-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/color-utils.js"></script>
+		<script type="text/javascript" src="scripts/utilities/unit-conversions.js"></script>
+		<script type="text/javascript" src="scripts/utilities/vector2.js"></script>
+
+		<!-- optics model scripts -->
+		<script type="text/javascript" src="scripts/models/optics/physics/light.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/physics/spectral-lines.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/material.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/materials.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/materials/nikon-glasses.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/surface.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/planar.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/surfaces/spherical.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/element.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/lens.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/elements/elements.js"></script>
+		<script type="text/javascript" src="scripts/models/optics/optics.js"></script>
+
+		<!-- viewport scripts -->
+		<script type="text/javascript" src="scripts/views/mouse/mouse-drag-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/mouse/mouse-wheel-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/bounds/bounds.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/bounds/bounds2.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/grids/grid.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/grids/multi-grid.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/canvas-viewport.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-drag-pan-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-drag-zoom-behavior.js"></script>
+		<script type="text/javascript" src="scripts/views/viewports/behaviors/navigation/mouse-wheel-zoom-behavior.js"></script>
+
+		<!-- optics viewing scripts -->
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/surface-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/planar-view.js"></script>
+		<script type="text/javascript" src="scripts/views/optics/elements/surfaces/spherical-view.js"></script>	
+		
+		<div id="text" style="position:absolute"></div>
+		<canvas id="canvas" style="width:100%; height:100%"></canvas>
+		
+		<script>
+
+			// create surfaces
+			//
+			var surface1 = new Spherical(100, 100);
+			var surface2 = new Spherical(-100, 100);
+
+			// create views
+			//
+			var views = [];
+			views.push(SurfaceView.create(surface1, {
+				clockwise: true
+			}));
+			views.push(SurfaceView.create(surface2, {
+				clockwise: false
+			}));
+			views.push(SurfaceView.create(surface1, {
+				clockwise: true
+			}));
+			views.push(SurfaceView.create(surface2, {
+				clockwise: false
+			}));
+
+			window.onload = function() {
+
+				// create viewport
+				//
+				var viewport = new CanvasViewport(document.getElementById("canvas"), function(context) {
+
+					// draw views
+					//
+					context.translate(-75, 0);
+					for (var i = 0; i < views.length; i++) {
+
+						// set drawing context
+						//
+						context.lineWidth = 2 / pixelsPerMillimeter / this.scale;
+						context.strokeStyle = "black";
+						context.fillStyle = "#ccccff";
+
+						// draw surface
+						//
+						context.beginPath();
+						views[i].draw(context);
+						context.fill();
+						context.stroke();
+
+						// show offsets
+						//
+						context.fillStyle = "#0000ff";
+						context.beginPath();
+						context.arc(0, 0, 5, 0, 2 * Math.PI);
+						context.fill();
+
+						// go to next view
+						//
+						context.translate(50, 0);
+					}
+				}, {
+					grid: new MultiGrid()
+				});
+
+				// create viewport behaviors
+				//
+				var panBehavior = new MouseDragPanBehavior(viewport, null, {
+					button: 1
+				});
+				var zoomBehavior = new MouseDragZoomBehavior(viewport, null, {
+					button: 2
+				});
+				var zoomBehavior = new MouseWheelZoomBehavior(viewport);
+			};
+		</script>
+	</body>
+</html>
